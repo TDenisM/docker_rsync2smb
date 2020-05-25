@@ -8,7 +8,7 @@ Based on https://hub.docker.com/r/tcousin/cifs-rsync with some modifications:
 - rsync lock mechanism to prevent "a racing condition" - if you ran it every minute, there is a risk that one or more of the rsync processes would still be running due to file size or network speed and the next process would just be in competition with it; a racing condition (https://superuser.com/a/848123).
 
 Full list of available environment variables:
-- ENV SRC_SHARE_SERVER
+- SRC_SHARE_SERVER
 - SRC_SHARE_USER
 - SRC_SHARE_PASS
 - SRC_SHARE_DOMAIN
