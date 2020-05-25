@@ -13,6 +13,7 @@ Usage (sync every 10 minutes):
 ```
 docker run -d --privileged -e SRC_SHARE_SERVER=sambaserver/src -e SRC_SHARE_USER=bmd -e SRC_SHARE_PASS=bmd -e DST_SHARE_SERVER=sambaserver/dst -e DST_SHARE_USER=bmd -e DST_SHARE_PASS=bmd -e RSYNC_OPTS="--include=DF[0-9][0-9][0-9][0-9][0-9][0-9].TXT --exclude=*" -e CRON_PATTERN="*/10 * * * *" dentrunov/rsync2smb:latest
 ```
+*Important! In this example rsync filter set - it will sync only file name like FD123456.TXT Please edit filter according to your needs!*
 
 To run test SAMBA server you can use sixeyed/samba container:
 ```
