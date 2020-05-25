@@ -2,10 +2,24 @@ Docker container for synchronization with rsync and cron two mounted Samba CIFS 
 Based on https://hub.docker.com/r/tcousin/cifs-rsync with some modifications:
 - Based on Ubuntu 18.04.
 - Domain authorisation variables SRC_SHARE_DOMAIN and DST_SHARE_DOMAIN if needed (leave empty if not, default: none).
-- rsync options variable RSYNC_OPTS added: it is possible to add any additional options if you need - I use it for file patterns - see default variable in Dockerfile.
+- rsync options variable RSYNC_OPTS added (-ahv are already included): it is possible to add any additional options if you need - I use it for file patterns - see default variable in Dockerfile.
 - cron pattern set with variable CRON_PATTERN (every minute as default: * * * * *).
 - Source and destenation Samba version set with SRC_SMB_VER and DST_SMB_VER (default: 3.0)
 - rsync lock mechanism to prevent "a racing condition" - if you ran it every minute, there is a risk that one or more of the rsync processes would still be running due to file size or network speed and the next process would just be in competition with it; a racing condition (https://superuser.com/a/848123).
+
+Full list of available environment variables:
+- ENV SRC_SHARE_SERVER
+- SRC_SHARE_USER
+- SRC_SHARE_PASS
+- SRC_SHARE_DOMAIN
+- SRC_SMB_VER
+- DST_SHARE_SERVER
+- DST_SHARE_USER
+- DST_SHARE_PASS
+- DST_SHARE_DOMAIN
+- DST_SMB_VER
+- RSYNC_OPTS
+- CRON_PATTERN
 
 CIFS mounting require additional capabilities, so run container in privileged mode or add --cap-add SYS_ADMIN --cap-add DAC_READ_SEARCH
 
