@@ -19,11 +19,11 @@ echo "Mounting..."
 mount -av
 
 echo "Creating rsync cron job"
-if grep -Fxq "$CRON_PATTERN   root    /rsyncwrapper.sh >> /var/log/cron.log 2>&1" /etc/crontab
+if grep -Fxq "* * * * *   root    /rsyncwrapper.sh >> /var/log/cron.log 2>&1" /etc/crontab
 then
     echo "Cron job existing. Pass."
 else
-    echo "$CRON_PATTERN   root    /rsyncwrapper.sh >> /var/log/cron.log 2>&1" >> /etc/crontab
+    echo "* * * * *   root    /rsyncwrapper.sh >> /var/log/cron.log 2>&1" >> /etc/crontab
 fi
 
 echo $RSYNC_OPTS > /root/rsync_opts
