@@ -1,14 +1,18 @@
+#!/bin/bash
 #Original https://superuser.com/questions/847850/behavior-of-rsync-with-file-thats-still-being-written
+ENV_FILE="/env"
 LOCK_NAME="RSYNC_PROCESS"
 LOCK_DIR='/tmp/'${LOCK_NAME}.lock
 PID_FILE=${LOCK_DIR}'/'${LOCK_NAME}'.pid'
+
+source "$ENV_FILE"
 
 if mkdir ${LOCK_DIR} 2>/dev/null; then
   # If the ${LOCK_DIR} doesn't exist, then start working & store the ${PID_FILE}
   echo $$ > ${PID_FILE}
 
   mount -av 2>&1
-  rsync -ahv $(cat /root/rsync_opts) /mnt/src/ /mnt/dst 2>&1
+  rsync -ahv $RSYNC_OPTS /mnt/src/ /mnt/dst 2>&1
 
   rm -rf ${LOCK_DIR}
   exit
