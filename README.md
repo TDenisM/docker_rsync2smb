@@ -21,6 +21,23 @@ Full list of available environment variables:
 - RSYNC_OPTS
 - CRON_PATTERN
 
+If '''/env''' file exists in container, environment variables set in command line will be ignored - all values will be gotten from this file. File format:
+'''
+export SRC_SHARE_SERVER='192.168.88.102/src'
+export SRC_SHARE_USER='bmd'
+export SRC_SHARE_PASS='bmd'
+export SRC_SHARE_DOMAIN=''
+export SRC_SMB_VER='3.0'
+export DST_SHARE_SERVER='192.168.88.103/dst'
+export DST_SHARE_USER='bmd'
+export DST_SHARE_PASS='bmd'
+export DST_SHARE_DOMAIN=''
+export DST_SMB_VER='3.0'
+export RSYNC_OPTS='--include=* --exclude=*'
+export CRON_PATTERN='* * * * *'
+'''
+Changing **RSYNC_OPTS** value apply without container restart. All other require container restart.
+
 CIFS mounting require additional capabilities, so run container in privileged mode or add --cap-add SYS_ADMIN --cap-add DAC_READ_SEARCH
 
 Usage (sync every 10 minutes):
