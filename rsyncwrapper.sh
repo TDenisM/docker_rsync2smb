@@ -12,7 +12,7 @@ if mkdir ${LOCK_DIR} 2>/dev/null; then
   echo $$ > ${PID_FILE}
   
   echo "Mounting $SRC_SHARE_SERVER"
-  mount.cifs -o vers=$SRC_SMB_VER,username=$SRC_SHARE_USER,password=$SRC_SHARE_PASS,domain=$SRC_SHARE_DOMAIN,ro,soft //$SRC_SHARE_SERVER /mnt/src
+  /sbin/mount.cifs -o vers=$SRC_SMB_VER,username=$SRC_SHARE_USER,password=$SRC_SHARE_PASS,domain=$SRC_SHARE_DOMAIN,ro,soft //$SRC_SHARE_SERVER /mnt/src
   case $? in
   0) echo "Success"
      ;;
@@ -43,7 +43,7 @@ if mkdir ${LOCK_DIR} 2>/dev/null; then
   esac
 
   echo "Mounting $DST_SHARE_SERVER"
-  mount.cifs -o vers=$DST_SMB_VER,username=$DST_SHARE_USER,password=$DST_SHARE_PASS,domain=$DST_SHARE_DOMAIN,rw,soft //$DST_SHARE_SERVER /mnt/dst
+  /sbin/mount.cifs -o vers=$DST_SMB_VER,username=$DST_SHARE_USER,password=$DST_SHARE_PASS,domain=$DST_SHARE_DOMAIN,rw,soft //$DST_SHARE_SERVER /mnt/dst
   case $? in
   0) echo "Success"
      ;;
@@ -74,6 +74,8 @@ if mkdir ${LOCK_DIR} 2>/dev/null; then
   esac
 
   rsync -ahv $RSYNC_OPTS /mnt/src/ /mnt/dst 2>&1
+  umount /mnt/src
+  umount /mnt/dst
 
   rm -rf ${LOCK_DIR}
   exit
