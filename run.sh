@@ -77,6 +77,8 @@ case $? in
 esac
 
 /rsyncwrapper.sh
+umount /mnt/src
+umount /mnt/dst
 
 echo "Creating rsync cron job"
 echo "$CRON_PATTERN   root    /rsyncwrapper.sh >> /var/log/cron.log 2>&1" > /etc/crontab
