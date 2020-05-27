@@ -14,25 +14,68 @@ else
         done
 fi
 
-echo "Creating source $SRC_SHARE_SERVER"
-if grep -Fxq "//$SRC_SHARE_SERVER /mnt/src cifs uid=0,gid=0,user=$SRC_SHARE_USER,password=$SRC_SHARE_PASS,domain=$SRC_SHARE_DOMAIN,_netdev,vers=$SRC_SMB_VER 0 0" /etc/fstab
-then
-    echo "Source existed. Pass."
-else
-    echo "//$SRC_SHARE_SERVER /mnt/src cifs uid=0,gid=0,user=$SRC_SHARE_USER,password=$SRC_SHARE_PASS,domain=$SRC_SHARE_DOMAIN,_netdev,vers=$SRC_SMB_VER 0 0" >> /etc/fstab
-fi
+echo "Mounting $SRC_SHARE_SERVER"
+mount.cifs -o vers=$SRC_SMB_VER,username=$SRC_SHARE_USER,password=$SRC_SHARE_PASS,domain=$SRC_SHARE_DOMAIN,ro,soft //$SRC_SHARE_SERVER /mnt/src
+case $? in
+  0) echo "Success"
+     ;;
 
+  1) echo "Incorrect invocation or permissions. Exiting."
+     ;;
 
-echo "Creating destenation $DST_SHARE_SERVER"
-if grep -Fxq "//$DST_SHARE_SERVER /mnt/dst cifs uid=0,gid=0,user=$DST_SHARE_USER,password=$DST_SHARE_PASS,domain=$DST_SHARE_DOMAIN,_netdev,vers=$DST_SMB_VER 0 0" /etc/fstab
-then
-    echo "Destenation existed. Pass."
-else
-    echo "//$DST_SHARE_SERVER /mnt/dst cifs uid=0,gid=0,user=$DST_SHARE_USER,password=$DST_SHARE_PASS,domain=$DST_SHARE_DOMAIN,_netdev,vers=$DST_SMB_VER 0 0" >> /etc/fstab
-fi
+  2) echo "System error (out of memory, cannot fork, no more loop devices)"
+     ;;
 
-echo "Mounting..."
-mount -av
+  4) echo "Internal mount bug or missing nfs support in mount"
+     ;;
+
+  8) echo "User interrupt"
+     ;;
+
+  16) echo "Problems writing or locking /etc/mtab"
+      ;;
+
+  32) echo "Mount failure"
+      ;;
+
+  64) echo "Some mount succeeded"
+      ;;
+
+  *) echo "Unknown error. Exit code $?"
+     ;;
+esac
+
+echo "Mounting $DST_SHARE_SERVER"
+mount.cifs -o vers=$DST_SMB_VER,username=$DST_SHARE_USER,password=$DST_SHARE_PASS,domain=$DST_SHARE_DOMAIN,rw,soft //$DST_SHARE_SERVER /mnt/dst
+case $? in
+  0) echo "Success"
+     ;;
+
+  1) echo "Incorrect invocation or permissions. Exiting."
+     ;;
+
+  2) echo "System error (out of memory, cannot fork, no more loop devices)"
+     ;;
+
+  4) echo "Internal mount bug or missing nfs support in mount"
+     ;;
+
+  8) echo "User interrupt"
+     ;;
+
+  16) echo "Problems writing or locking /etc/mtab"
+      ;;
+
+  32) echo "Mount failure"
+      ;;
+
+  64) echo "Some mount succeeded"
+      ;;
+
+  *) echo "Unknown error. Exit code $?"
+     ;;
+esac
+
 /rsyncwrapper.sh
 
 echo "Creating rsync cron job"
