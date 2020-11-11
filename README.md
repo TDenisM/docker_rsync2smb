@@ -1,4 +1,4 @@
-Docker container for synchronization with rsync and cron two mounted Samba CIFS folders.
+Docker container for synchronization with rsync and cron of two mounted Samba CIFS folders.
 Based on https://hub.docker.com/r/tcousin/cifs-rsync with some modifications:
 - Based on Ubuntu 18.04.
 - Domain authorisation variables SRC_SHARE_DOMAIN and DST_SHARE_DOMAIN if needed (leave empty if not, default: none).
